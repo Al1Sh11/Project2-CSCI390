@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GameStream - All Platforms, One Store</title>
+     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+  </head>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            min-height: 100vh;
+            font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+            color: #f5f7ff;
+            background: radial-gradient(circle at 10% 10%, #243b71 0%, transparent 35%),
+                        radial-gradient(circle at 90% 20%, #9d4edd 0%, transparent 30%),
+                        linear-gradient(120deg, #0b132b, #1c2541);
+            background-attachment: fixed;
+        }
+
+        .navbar {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            width: min(1100px, 92%);
+            margin: 18px auto 0;
+            padding: 14px 20px;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            border-radius: 14px;
+            background: rgba(255, 255, 255, 0.08);
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .brand {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            text-decoration: none;
+            color: #f5f7ff;
+        }
+
+        .brand-badge {
+            width: 30px;
+            height: 30px;
+            border-radius: 8px;
+            background: #ffb703;
+            color: #1a1a1a;
+            display: grid;
+            place-items: center;
+            font-weight: 900;
+        }
+
+        .nav-links {
+            list-style: none;
+            display: flex;
+            gap: 18px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: #bfc7e6;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.2s ease;
+        }
+
+        .nav-links a:hover {
+            color: #f5f7ff;
+        }
+
+        .nav-links a.active {
+            color: #ffb703;
+        }
+
+        .cta {
+            padding: 10px 14px;
+            border-radius: 10px;
+            border: 0;
+            font-weight: 700;
+            text-decoration: none;
+            color: #161616;
+            background: #ffb703;
+            transition: transform 0.2s ease;
+        }
+
+        .cta:hover {
+            transform: translateY(-1px);
+        }
+
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: 0;
+            color: #f5f7ff;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .hero {
+            width: min(1100px, 92%);
+            margin: 40px auto;
+            padding: 60px 40px;
+            border-radius: 20px;
+            background: linear-gradient(135deg, rgba(255, 183, 3, 0.15), rgba(157, 78, 221, 0.15)),
+                        rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 183, 3, 0.2);
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 16px;
+            background: linear-gradient(90deg, #ffb703, #9d4edd);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            font-size: 1.1rem;
+            color: #bfc7e6;
+            margin-bottom: 32px;
+        }
+
+        .deals-banner {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 30px;
+        }
+
+        .deal-card {
+            padding: 16px 24px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            text-align: left;
+            min-width: 200px;
+        }
+
+        .deal-label {
+            font-size: 0.75rem;
+            color: #ffb703;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 4px;
+        }
+
+        .deal-text {
+            font-weight: 600;
+            color: #f5f7ff;
+        }
+
+        .platform-selector {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-top: 40px;
+        }
+
+        .platform-btn {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 24px;
+            border-radius: 12px;
+            border: 2px solid rgba(255, 255, 255, 0.15);
+            background: rgba(255, 255, 255, 0.05);
+            color: #f5f7ff;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .platform-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .platform-btn.steam:hover { border-color: #1b2838; background: rgba(27, 40, 56, 0.5); }
+        .platform-btn.xbox:hover { border-color: #107c10; background: rgba(16, 124, 16, 0.3); }
+        .platform-btn.playstation:hover { border-color: #003791; background: rgba(0, 55, 145, 0.3); }
+        .platform-btn.nintendo:hover { border-color: #e60012; background: rgba(230, 0, 18, 0.3); }
+
+        .platform-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 4px;
+            display: grid;
+            place-items: center;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .platform-icon-steam { background: #1b2838; }
+        .platform-icon-xbox { background: #107c10; }
+        .platform-icon-playstation { background: #003791; }
+        .platform-icon-nintendo { background: #e60012; }
+
+        .section {
+            width: min(1100px, 92%);
+            margin: 40px auto;
+            padding: 30px;
+            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #f5f7ff;
+        }
+
+        .section-title .icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: grid;
+            place-items: center;
+            font-size: 14px;
+            font-weight: bold;
+            background: #ffb703;
+            color: #1a1a1a;
+        }
+
+        .see-all-btn {
+            padding: 8px 16px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: transparent;
+            color: #bfc7e6;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+        }
+
+        .see-all-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: #f5f7ff;
+        }
+
+        .best-sellers-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .game-card {
+            border-radius: 12px;
+            overflow: hidden;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .game-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .game-card img {
+            width: 100%;
+            height: 240px;
+            object-fit: cover;
+            background: linear-gradient(135deg, #2a2a4a, #1a1a2e);
+            display: block;
+        }
+
+        .game-info {
+            padding: 16px;
+        }
+
+        .game-platform {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.65rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .platform-steam { background: rgba(102, 192, 244, 0.2); color: #66c0f4; }
+        .platform-xbox { background: rgba(155, 240, 11, 0.2); color: #9bf00b; }
+        .platform-playstation { background: rgba(0, 67, 156, 0.3); color: #66a0ff; }
+        .platform-nintendo { background: rgba(230, 0, 18, 0.2); color: #ff4d4d; }
+
+        .game-title {
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            color: #f5f7ff;
+        }
+
+        .game-price-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .game-price {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #ffb703;
+        }
+
+        .original-price {
+            font-size: 0.85rem;
+            color: #888;
+            text-decoration: line-through;
+        }
+
+        .discount-badge {
+            padding: 2px 6px;
+            border-radius: 4px;
+            background: #4caf50;
+            color: white;
+            font-size: 0.7rem;
+            font-weight: 700;
+        }
+
+        .equipment-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 20px;
+        }
+
+        .equipment-card {
+            border-radius: 12px;
+            overflow: hidden;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .equipment-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .equipment-card img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            background: linear-gradient(135deg, #2a2a4a, #1a1a2e);
+            display: block;
+        }
+
+        .equipment-info {
+            padding: 16px;
+        }
+
+        .equipment-category {
+            font-size: 0.75rem;
+            color: #9d4edd;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+        }
+
+        .equipment-name {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #f5f7ff;
+        }
+
+        .equipment-price {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #ffb703;
+        }
+
+        .footer {
+            width: min(1100px, 92%);
+            margin: 60px auto 30px;
+            padding: 30px;
+            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            text-align: center;
+        }
+
+        .go-website-btn {
+            margin-top: 10px;
+            padding: 8px 12px;
+            border: none;
+            border-radius: 8px;
+            background: #0ea5e9;
+            color: #fff;
+            font-size: 0.8rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+
+        .go-website-btn:hover {
+            background: #0284c7;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: #bfc7e6;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.2s ease;
+        }
+
+        .footer-links a:hover {
+            color: #f5f7ff;
+        }
+
+        .footer-copy {
+            color: #888;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 760px) {
+            .navbar {
+                flex-wrap: wrap;
+            }
+
+            .menu-toggle {
+                display: inline-block;
+            }
+
+            .nav-links {
+                width: 100%;
+                display: none;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+                padding-top: 10px;
+            }
+
+            .nav-links.open {
+                display: flex;
+            }
+
+            .cta {
+                display: none;
+            }
+
+            .hero {
+                padding: 40px 24px;
+            }
+
+            .hero h1 {
+                font-size: 1.75rem;
+            }
+
+            .best-sellers-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            }
+
+            .equipment-grid {
+                grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            }
+
+            .section {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <a href="Home.html" class="brand">
+            <span class="brand-badge">G</span>
+            <span>GameStream</span>
+        </a>
+
+        <button class="menu-toggle" id="menuToggle" aria-label="Open navigation menu">&#9776;</button>
+
+        <ul class="nav-links" id="navLinks">
+            <li><a href="Home.html" class="active">Home</a></li>
+            <li><a href="Steam.html">Steam</a></li>
+            <li><a href="Xbox.html">Xbox</a></li>
+            <li><a href="PlayStation.html">PlayStation</a></li>
+            <li><a href="Nintendo.html">Nintendo</a></li>
+            <li><a href="Equipment.html">Equipment</a></li>
+        </ul>
+
+        <a class="cta" href="Login.html">Login</a>
+    </nav>
+
+    <section class="hero">
+        <h1>All Your Games, One Store</h1>
+        <p>Browse the best deals and best-selling games from Steam, Xbox, PlayStation, and Nintendo Switch.</p>
+
+        <div class="deals-banner">
+            <div class="deal-card">
+                <div class="deal-label">Flash Deal</div>
+                <div class="deal-text">Up to 75% off on Steam titles</div>
+            </div>
+            <div class="deal-card">
+                <div class="deal-label">Xbox Sale</div>
+                <div class="deal-text">Game Pass Ultimate - 3 months for $1</div>
+            </div>
+            <div class="deal-card">
+                <div class="deal-label">PlayStation Deals</div>
+                <div class="deal-text">Save 30% on select exclusives</div>
+            </div>
+            <div class="deal-card">
+                <div class="deal-label">Nintendo Sale</div>
+                <div class="deal-text">Indie game discounts up to 50%</div>
+            </div>
+        </div>
+
+        <div class="platform-selector">
+            <a href="Steam.html" class="platform-btn steam">
+                <span class="platform-icon platform-icon-steam">S</span>
+                Browse Steam
+            </a>
+            <a href="Xbox.html" class="platform-btn xbox">
+                <span class="platform-icon platform-icon-xbox">X</span>
+                Browse Xbox
+            </a>
+            <a href="PlayStation.html" class="platform-btn playstation">
+                <span class="platform-icon platform-icon-playstation">P</span>
+                Browse PlayStation
+            </a>
+            <a href="Nintendo.html" class="platform-btn nintendo">
+                <span class="platform-icon platform-icon-nintendo">N</span>
+                Browse Nintendo
+            </a>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="section-header">
+            <div class="section-title">
+                <span class="icon">Hot</span>
+                Best Sellers
+            </div>
+            <a href="Steam.html" class="see-all-btn">View All Best Sellers -></a>
+        </div>
+
+        <div class="best-sellers-grid">
+            <div class="game-card">
+                <img src="https://cdn.cloudflare.steamstatic.com/steam/apps/1086940/header.jpg" alt="Baldur's Gate 3">
+                <div class="game-info">
+                    <span class="game-platform platform-steam">Steam</span>
+                    <h3 class="game-title">Baldur's Gate 3</h3>
+                    <div class="game-price-row">
+                        <span class="game-price">$59.99</span>
+                        <span class="discount-badge">-10%</span>
+                    </div>
+                    <a href="https://store.steampowered.com/app/1086940/Baldurs_Gate_3/" target="_blank" rel="noopener noreferrer" class="go-website-btn">Go to Website</a>
+                </div>
+            </div>
+
+            <div class="game-card">
+                <img src="assets/images/marvel-spiderman-2.jpeg" alt="Spider-Man 2">
+                <div class="game-info">
+                    <span class="game-platform platform-playstation">PlayStation</span>
+                    <h3 class="game-title">Marvel's Spider-Man 2</h3>
+                    <div class="game-price-row">
+                        <span class="game-price">$69.99</span>
+                    </div>
+                    <a href="https://www.playstation.com/en-us/games/marvels-spider-man-2/" target="_blank" rel="noopener noreferrer" class="go-website-btn">Go to Website</a>
+                </div>
+            </div>
+
+            <div class="game-card">
+                <img src="assets/images/Starfield.jpg" alt="Starfield">
+                <div class="game-info">
+                    <span class="game-platform platform-xbox">Xbox</span>
+                    <h3 class="game-title">Starfield</h3>
+                    <div class="game-price-row">
+                        <span class="game-price">$69.99</span>
+                        <span class="original-price">$79.99</span>
+                    </div>
+                    <a href="https://www.xbox.com/en-US/games/starfield" target="_blank" rel="noopener noreferrer" class="go-website-btn">Go to Website</a>
+                </div>
+            </div>
+
+            <div class="game-card">
+                <img src="assets/images/LOZ-TOK.jpg" alt="Zelda">
+                <div class="game-info">
+                    <span class="game-platform platform-nintendo">Nintendo</span>
+                    <h3 class="game-title">Zelda: Tears of the Kingdom</h3>
+                    <div class="game-price-row">
+                        <span class="game-price">$69.99</span>
+                    </div>
+                    <a href="https://www.nintendo.com/us/store/products/the-legend-of-zelda-tears-of-the-kingdom-switch/" target="_blank" rel="noopener noreferrer" class="go-website-btn">Go to Website</a>
+                </div>
+            </div>
+
+            <div class="game-card">
+                <img src="https://cdn.cloudflare.steamstatic.com/steam/apps/1245620/header.jpg" alt="Elden Ring">
+                <div class="game-info">
+                    <span class="game-platform platform-steam">Steam</span>
+                    <h3 class="game-title">Elden Ring</h3>
+                    <div class="game-price-row">
+                        <span class="game-price">$59.99</span>
+                        <span class="discount-badge">-25%</span>
+                    </div>
+                    <a href="https://store.steampowered.com/app/1245620/ELDEN_RING/" target="_blank" rel="noopener noreferrer" class="go-website-btn">Go to Website</a>
+                </div>
+            </div>
+
+            <div class="game-card">
+                <img src="assets/images/god-of-war-ragnarok.jpg" alt="God of War">
+                <div class="game-info">
+                    <span class="game-platform platform-playstation">PlayStation</span>
+                    <h3 class="game-title">God of War Ragnarok</h3>
+                    <div class="game-price-row">
+                        <span class="game-price">$69.99</span>
+                        <span class="original-price">$79.99</span>
+                    </div>
+                    <a href="https://www.playstation.com/en-us/games/god-of-war-ragnarok/" target="_blank" rel="noopener noreferrer" class="go-website-btn">Go to Website</a>
+                </div>
+            </div>
+
+            <div class="game-card">
+                <img src="assets/images/forzahorizon5.jpg" alt="Forza">
+                <div class="game-info">
+                    <span class="game-platform platform-xbox">Xbox</span>
+                    <h3 class="game-title">Forza Horizon 5</h3>
+                    <div class="game-price-row">
+                        <span class="game-price">$59.99</span>
+                        <span class="discount-badge">-40%</span>
+                    </div>
+                    <a href="https://www.xbox.com/en-US/games/forza-horizon-5" target="_blank" rel="noopener noreferrer" class="go-website-btn">Go to Website</a>
+                </div>
+            </div>
+
+            <div class="game-card">
+                <img src="assets/images/Supermario-Wonder.jpg" alt="Mario">
+                <div class="game-info">
+                    <span class="game-platform platform-nintendo">Nintendo</span>
+                    <h3 class="game-title">Super Mario Bros. Wonder</h3>
+                    <div class="game-price-row">
+                        <span class="game-price">$59.99</span>
+                    </div>
+                    <a href="https://www.nintendo.com/us/store/products/super-mario-bros-wonder-switch/" target="_blank" rel="noopener noreferrer" class="go-website-btn">Go to Website</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        
+        <div class="section-header">
+            <div class="section-title">
+                <span class="icon">??</span>
+                Featured Equipment
+            </div>
+            
+        </div>
+
+        <div class="equipment-grid">
+            <div class="equipment-card">
+                <img src="https://www.glitched.online/wp-content/uploads/2022/08/06d8a7c076df3b090cf777525e61e9a65174f410-scaled-1.webp" alt="DualSense Edge">
+                <div class="equipment-info">
+                    <div class="equipment-category">PlayStation</div>
+                    <h3 class="equipment-name">DualSense Edge Controller</h3>
+                    <div class="equipment-price">$199.99</div>
+                </div>
+            </div>
+
+            <div class="equipment-card">
+                <img src="https://tse1.mm.bing.net/th/id/OIP.XlAIc4d3f6FXu2jYyp4wJwHaEK?rs=1&pid=ImgDetMain&o=7&rm=3" alt="Elite Controller">
+                <div class="equipment-info">
+                    <div class="equipment-category">Xbox</div>
+                    <h3 class="equipment-name">Xbox Elite Controller Series 2</h3>
+                    <div class="equipment-price">$179.99</div>
+                </div>
+            </div>
+
+            <div class="equipment-card">
+                <img src="https://tse3.mm.bing.net/th/id/OIP.YLihWa9RU0JI3YpvuGQ1nAHaHa?rs=1&pid=ImgDetMain&o=7&rm=3" alt="Pro Controller">
+                <div class="equipment-info">
+                    <div class="equipment-category">Nintendo</div>
+                    <h3 class="equipment-name">Switch Pro Controller</h3>
+                    <div class="equipment-price">$69.99</div>
+                </div>
+            </div>
+
+            <div class="equipment-card">
+                <img src="https://www.pcworld.com/wp-content/uploads/2023/11/Steam-Deck-OLED-screen.jpg?quality=50&strip=all" alt="Steam Deck">
+                <div class="equipment-info">
+                    <div class="equipment-category">Steam</div>
+                    <h3 class="equipment-name">Steam Deck OLED 1TB</h3>
+                    <div class="equipment-price">$649.99</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="footer-links">
+            <a href="Home.html">Home</a>
+            <a href="Steam.html">Steam</a>
+            <a href="https://www.xbox.com/en-US/games/store">Xbox</a>
+            <a href="https://store.playstation.com/en-us/pages/latest">PlayStation</a>
+            <a href="Nintendo.html">Nintendo</a>
+            <a href="Equipment.html">Equipment</a>
+        </div>
+        <div class="footer-copy">
+            &copy; 2024 GameStream. All rights reserved. Not affiliated with Steam, Xbox, PlayStation, or Nintendo(PROPERTY OF ALI SHAER AND SAJED GHANDOUR).
+        </div>
+    </footer>
+
+    
+<script src="assets/game-covers.js"></script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,103 @@
+/* GameStream Global Styles & Animations */
+
+body {
+  font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+}
+
+/* Login Ring Animations */
+@keyframes gs-rotate {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes gs-rotate-reverse {
+  0% { transform: rotate(360deg); }
+  100% { transform: rotate(0deg); }
+}
+
+.gs-ring-item {
+  position: absolute;
+  inset: 0;
+  border: 2px solid rgba(255, 255, 255, 0.18);
+  transition: 0.4s;
+}
+
+.gs-ring-item:nth-child(1) {
+  border-radius: 38% 62% 63% 37% / 41% 44% 56% 59%;
+  animation: gs-rotate 6s linear infinite;
+}
+
+.gs-ring-item:nth-child(2) {
+  border-radius: 41% 44% 56% 59% / 38% 62% 63% 37%;
+  animation: gs-rotate 4s linear infinite;
+}
+
+.gs-ring-item:nth-child(3) {
+  border-radius: 41% 44% 56% 59% / 38% 62% 63% 37%;
+  animation: gs-rotate-reverse 10s linear infinite;
+}
+
+.gs-ring:hover .gs-ring-item:nth-child(1) {
+  border: 6px solid #ffb703;
+  filter: drop-shadow(0 0 20px #ffb703);
+}
+
+.gs-ring:hover .gs-ring-item:nth-child(2) {
+  border: 6px solid #bfc7e6;
+  filter: drop-shadow(0 0 20px #bfc7e6);
+}
+
+.gs-ring:hover .gs-ring-item:nth-child(3) {
+  border: 6px solid #f5f7ff;
+  filter: drop-shadow(0 0 20px #f5f7ff);
+}
+
+/* Card hover lift effect */
+.gs-card-hover {
+  transition: all 0.3s ease;
+}
+
+.gs-card-hover:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.gs-card-scale-hover {
+  transition: all 0.3s ease;
+}
+
+.gs-card-scale-hover:hover {
+  transform: scale(1.03);
+}
+
+/* Glassmorphism navbar */
+.gs-navbar {
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+/* Gradient text */
+.gs-gradient-text {
+  background: linear-gradient(90deg, #ffb703, #9d4edd);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0b132b;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 183, 3, 0.4);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 183, 3, 0.7);
+}

@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PlayStation eShop - GameStream</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            min-height: 100vh;
+            font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+            color: #f5f7ff;
+            background: radial-gradient(circle at 10% 10%, #5cb0ad 0%, transparent 35%),
+                        radial-gradient(circle at 90% 20%, #2c64a1 0%, transparent 30%),
+                        linear-gradient(120deg, #0b132b, #1c2541);
+            background-attachment: fixed;
+        }
+
+        .navbar {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            width: min(1100px, 92%);
+            margin: 18px auto 0;
+            padding: 14px 20px;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            border-radius: 14px;
+            background: rgba(255, 255, 255, 0.08);
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .brand {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 14px;
+            letter-spacing: 2px;
+            color: #ffb703;
+            text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.5);
+            text-decoration: none;
+        }
+
+        .brand-badge {
+            width: 30px;
+            height: 30px;
+            border-radius: 8px;
+            background: #ffb703;
+            color: #1a1a1a;
+            display: grid;
+            place-items: center;
+            font-weight: 900;
+        }
+
+        .nav-links {
+            list-style: none;
+            display: flex;
+            gap: 18px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: #bfc7e6;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.2s ease;
+        }
+
+        .nav-links a:hover, .nav-links a.active { color: #5cb0ad; }
+
+        .cta {
+            padding: 10px 14px;
+            border-radius: 10px;
+            border: 0;
+            font-weight: 700;
+            text-decoration: none;
+            color: #161616;
+            background: #ffb703;
+            transition: transform 0.2s ease;
+        }
+
+        .cta:hover { transform: translateY(-1px); }
+
+        .menu-toggle {
+            display: none;
+        }
+
+        #menu-checkbox {
+            display: none;
+        }
+
+        .menu-label {
+            display: none;
+            background: none;
+            border: 0;
+            color: #f5f7ff;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .hero {
+            width: min(1100px, 92%);
+            margin: 40px auto;
+            padding: 60px 40px;
+            border-radius: 20px;
+            background: linear-gradient(135deg, rgba(37, 168, 239, 0.15), rgba(54, 196, 214, 0.3));
+            border: 1px solid rgba(89, 171, 238, 0.3);
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 16px;
+            color: #4bb4ff;
+        }
+
+        .hero p {
+            font-size: 1.1rem;
+            color: #bfc7e6;
+            margin-bottom: 24px;
+        }
+
+        .section {
+            width: min(1100px, 92%);
+            margin: 40px auto;
+            padding: 30px;
+            border-radius: 16px;
+            background: rgba(37, 168, 239, 0.15);
+            border: 1px solid rgba(89, 171, 238, 0.3);
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid rgba(37, 168, 239, 0.15);
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #4bb4ff;
+        }
+
+        .featured-games {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .featured-card {
+            position: relative;
+            border-radius: 12px;
+            overflow: hidden;
+            background: rgba(37, 168, 239, 0.15);
+            border: 1px solid rgba(89, 171, 238, 0.3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+        }
+
+        .featured-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 30px rgba(89, 171, 238, 0.3);
+            border-color: #4bb4ff;
+        }
+
+        .featured-card img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            background: linear-gradient(135deg, #003791, #0049b7);
+        }
+
+        .featured-badge {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            padding: 6px 12px;
+            border-radius: 6px;
+            background: #ffb703;
+            color: #1a1a1a;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+
+        .featured-info {
+            padding: 16px;
+        }
+
+        .featured-info h3 {
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+            color: #f5f7ff;
+        }
+
+        .game-price {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #ffb703;
+        }
+
+        .original-price {
+            font-size: 0.9rem;
+            color: #888;
+            text-decoration: line-through;
+            margin-left: 8px;
+        }
+
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 16px;
+        }
+
+        .go-website-btn {
+            margin-top: 10px;
+            padding: 8px 12px;
+            border: none;
+            border-radius: 8px;
+            background: #0ea5e9;
+            color: #fff;
+            font-size: 0.8rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+
+        .go-website-btn:hover {
+            background: #0284c7;
+        }
+
+        .game-card {
+            border-radius: 10px;
+            overflow: hidden;
+            background: rgba(37, 168, 239, 0.15);
+            border: 1px solid rgba(89, 171, 238, 0.3);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .game-card:hover {
+            transform: scale(1.03);
+            border-color: #0284c7;
+            box-shadow: 0 0 20px rgba(89, 171, 238, 0.3);
+        }
+
+        .game-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            background: linear-gradient(135deg, #003791, #0049b7);
+            display: block;
+        }
+
+        .game-card-info {
+            padding: 12px;
+        }
+
+        .game-card-title {
+            font-size: 0.85rem;
+            margin-bottom: 6px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            color: #f5f7ff;
+        }
+
+        .game-card-price {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: #ffb703;
+        }
+
+        .nswitch-badge {
+            display: inline-block;
+            padding: 2px 6px;
+            border-radius: 3px;
+            background: linear-gradient(90deg, #5cb0ad, #2c64a1);
+            color: #fff;
+            font-size: 0.7rem;
+            font-weight: 700;
+            margin-right: 6px;
+        }
+
+        .buy-btn {
+            display: block;
+            width: 100%;
+            margin-top: 12px;
+            padding: 10px 16px;
+            background: #4bb4ff;
+            color: #1a1a1a;
+            text-align: center;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 0.9rem;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .buy-btn:hover {
+            background: #ffc933;
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(255, 183, 3, 0.4);
+        }
+
+        .footer {
+            width: min(1100px, 92%);
+            margin: 60px auto 30px;
+            padding: 30px;
+            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            text-align: center;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: #bfc7e6;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .footer-links a:hover { color: #21dcea; }
+
+        @media (max-width: 760px) {
+            .navbar { flex-wrap: wrap; }
+            .menu-label { display: inline-block; }
+            .nav-links {
+                width: 100%;
+                display: none;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+                padding-top: 10px;
+            }
+            #menu-checkbox:checked ~ .nav-links { display: flex; }
+            .cta { display: none; }
+            .featured-games { grid-template-columns: 1fr; }
+            .games-grid { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <a href="Home.html" class="brand">
+            <span class="brand-badge">G</span>
+            <span>GameStream</span>
+        </a>
+        <input type="checkbox" id="menu-checkbox">
+        <label for="menu-checkbox" class="menu-label">&#9776;</label>
+        <ul class="nav-links" id="navLinks">
+            <li><a href="Home.html">Home</a></li>
+            <li><a href="Steam.html">Steam</a></li>
+            <li><a href="Xbox.html">Xbox</a></li>
+            <li><a href="PlayStation.html" class="active">PlayStation</a></li>
+            <li><a href="Nintendo.html">Nintendo</a></li>
+            <li><a href="Equipment.html">Equipment</a></li>
+        </ul>
+        <a class="cta" href="Login.html">Login</a>
+    </nav>
+
+    <section class="hero">
+        <h1>PlayStation eShop</h1>
+        <p>Dive into the world of PlayStation with blockbuster titles and unforgettable gaming experiences.</p>
+    </section>
+
+    <section class="section">
+        <div class="section-header">
+            <h2 class="section-title">Best Sellers</h2>
+        </div>
+        <div class="featured-games">
+            <div class="featured-card">
+                <span class="featured-badge">TOP SELLER</span>
+                <img src="assets/images/astro-bot.jpg" alt="ASTRO BOT">
+                <div class="featured-info">
+                    <h3>ASTRO BOT</h3>
+                    <div class="game-price">$59.99</div>
+                    <a href="https://www.playstation.com/en-us/games/astro-bot/" target="_blank" rel="noopener noreferrer" class="buy-btn">🎮 Go to Website</a>
+                </div>
+            </div>
+            <div class="featured-card">
+                <span class="featured-badge">TOP SELLER</span>
+                <img src="assets/images/ghost-of-yotei.jpg" alt="Ghost of Yōtei">
+                <div class="featured-info">
+                    <h3>Ghost of Yōtei</h3>
+                    <div class="game-price">$69.99</div>
+                    <a href="https://www.playstation.com/en-us/games/ghost-of-yotei/" target="_blank" rel="noopener noreferrer" class="buy-btn">🎮 Go to Website</a>
+                </div>
+            </div>
+            <div class="featured-card">
+                <span class="featured-badge">TOP SELLER</span>
+                <img src="assets/images/death-stranding-2.jpg" alt="Death Stranding 2">
+                <div class="featured-info">
+                    <h3>Death Stranding 2: On the Beach</h3>
+                    <div class="game-price">$69.99</div>
+                    <a href="https://www.playstation.com/en-us/games/death-stranding-2-on-the-beach/" target="_blank" rel="noopener noreferrer" class="buy-btn">🎮 Go to Website</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="section-header">
+            <h2 class="section-title">PlayStation Games</h2>
+        </div>
+        <div class="games-grid">
+
+            <div class="game-card">
+                <img src="assets/images/helldivers-2.jpg" alt="Helldivers 2">
+                <div class="game-card-info">
+                    <div class="game-card-title">Helldivers 2</div>
+                    <div class="game-card-price">$39.99</div>
+                    <a href="https://www.playstation.com/en-us/games/helldivers-2/" target="_blank" rel="noopener noreferrer" class="buy-btn">🎮 Go to Website</a>
+                </div>
+            </div>
+
+            <div class="game-card">
+                <img src="assets/images/horizon-forbidden-west.jpg" alt="Horizon Forbidden West">
+                <div class="game-card-info">
+                    <div class="game-card-title">Horizon Forbidden West</div>
+                    <div class="game-card-price">$59.99</div>
+                    <a href="https://www.playstation.com/en-us/games/horizon-forbidden-west/" target="_blank" rel="noopener noreferrer" class="buy-btn">🎮 Go to Website</a>
+                </div>
+            </div>
+
+            <div class="game-card">
+                <img src="assets/images/the-last-of-us-part-i.jpg" alt="The Last of Us Part I">
+                <div class="game-card-info">
+                    <div class="game-card-title">The Last of Us Part I</div>
+                    <div class="game-card-price">$49.99</div>
+                    <a href="https://www.playstation.com/en-us/games/the-last-of-us-part-i/" target="_blank" rel="noopener noreferrer" class="buy-btn">🎮 Go to Website</a>
+                </div>
+            </div>
+
+            <div class="game-card">
+                <img src="assets/images/ratchet-and-clank-rift-apart.jpg" alt="Ratchet & Clank Rift Apart">
+                <div class="game-card-info">
+                    <div class="game-card-title">Ratchet & Clank: Rift Apart</div>
+                    <div class="game-card-price">$59.99</div>
+                    <a href="https://www.playstation.com/en-us/games/ratchet-and-clank-rift-apart/" target="_blank" rel="noopener noreferrer" class="buy-btn">🎮 Go to Website</a>
+                </div>
+            </div>
+
+            <div class="game-card">
+                <img src="assets/images/god-of-war-ragnarok.jpg" alt="God of War Ragnarök">
+                <div class="game-card-info">
+                    <div class="game-card-title">God of War Ragnarök</div>
+                    <div class="game-card-price">$59.99</div>
+                    <a href="https://www.playstation.com/en-us/games/god-of-war-ragnarok/" target="_blank" rel="noopener noreferrer" class="buy-btn">🎮 Go to Website</a>
+                </div>
+            </div>
+
+            <div class="game-card">
+                <img src="assets/images/marvel-spiderman-2.jpeg" alt="Marvel's Spider-Man 2">
+                <div class="game-card-info">
+                    <div class="game-card-title">Marvel's Spider-Man 2</div>
+                    <div class="game-card-price">$69.99</div>
+                    <a href="https://www.playstation.com/en-us/games/marvels-spider-man-2/" target="_blank" rel="noopener noreferrer" class="buy-btn">🎮 Go to Website</a>
+                </div>
+            </div>
+
+            <div class="game-card">
+                <img src="assets/images/stellar-blade.jpg" alt="Stellar Blade">
+                <div class="game-card-info">
+                    <div class="game-card-title">Stellar Blade</div>
+                    <div class="game-card-price">$69.99</div>
+                    <a href="https://www.playstation.com/en-us/games/stellar-blade/" target="_blank" rel="noopener noreferrer" class="buy-btn">🎮 Go to Website</a>
+                </div>
+            </div>
+
+            <div class="game-card">
+                <img src="assets/images/gran-turismo-7.jpg" alt="Gran Turismo 7">
+                <div class="game-card-info">
+                    <div class="game-card-title">Gran Turismo 7</div>
+                    <div class="game-card-price">$29.99</div>
+                    <a href="https://www.playstation.com/en-us/games/gran-turismo-7/" target="_blank" rel="noopener noreferrer" class="buy-btn">🎮 Go to Website</a>
+                </div>
+            </div>
+
+            <div class="game-card">
+                <img src="assets/images/days-gone.jpg" alt="Days Gone">
+                <div class="game-card-info">
+                    <div class="game-card-title">Days Gone Remastered</div>
+                    <div class="game-card-price">$49.99</div>
+                    <a href="https://www.playstation.com/en-us/games/days-gone/" target="_blank" rel="noopener noreferrer" class="buy-btn">🎮 Go to Website</a>
+                </div>
+            </div>
+
+            <div class="game-card">
+                <img src="assets/images/demons-souls.jpg" alt="Demon's Souls">
+                <div class="game-card-info">
+                    <div class="game-card-title">Demon's Souls</div>
+                    <div class="game-card-price">$59.99</div>
+                    <a href="https://www.playstation.com/en-us/games/demons-souls/" target="_blank" rel="noopener noreferrer" class="buy-btn">🎮 Go to Website</a>
+                </div>
+            </div>
+
+            <div class="game-card">
+                <img src="assets/images/marvel-spiderman-miles-morales.jpg" alt="Spider-Man Miles Morales">
+                <div class="game-card-info">
+                    <div class="game-card-title">Marvel's Spider-Man: Miles Morales</div>
+                    <div class="game-card-price">$49.99</div>
+                    <a href="https://www.playstation.com/en-us/games/marvels-spider-man-miles-morales/" target="_blank" rel="noopener noreferrer" class="buy-btn">🎮 Go to Website</a>
+                </div>
+            </div>
+
+            <div class="game-card">
+                <img src="assets/images/sackboy-a-big-adventure.jpg" alt="Sackboy A Big Adventure">
+                <div class="game-card-info">
+                    <div class="game-card-title">Sackboy: A Big Adventure</div>
+                    <div class="game-card-price">$59.99</div>
+                    <a href="https://www.playstation.com/en-us/games/sackboy-a-big-adventure/" target="_blank" rel="noopener noreferrer" class="buy-btn">🎮 Go to Website</a>
+                </div>
+            </div>
+
+            <div class="game-card">
+                <img src="assets/images/returnal.jpg" alt="Returnal">
+                <div class="game-card-info">
+                    <div class="game-card-title">Returnal</div>
+                    <div class="game-card-price">$49.99</div>
+                    <a href="https://www.playstation.com/en-us/games/returnal/" target="_blank" rel="noopener noreferrer" class="buy-btn">🎮 Go to Website</a>
+                </div>
+            </div>
+
+            <div class="game-card">
+                <img src="assets/images/rise-of-the-ronin.jpg" alt="Rise of the Ronin">
+                <div class="game-card-info">
+                    <div class="game-card-title">Rise of the Ronin</div>
+                    <div class="game-card-price">$69.99</div>
+                    <a href="https://www.playstation.com/en-us/games/rise-of-the-ronin/" target="_blank" rel="noopener noreferrer" class="buy-btn">🎮 Go to Website</a>
+                </div>
+            </div>
+
+            <div class="game-card">
+                <img src="assets/images/uncharted-4.jpg" alt="Uncharted 4">
+                <div class="game-card-info">
+                    <div class="game-card-title">UNCHARTED: Legacy Collection</div>
+                    <div class="game-card-price">$49.99</div>
+                    <a href="https://www.playstation.com/en-us/games/uncharted-legacy-of-thieves-collection/" target="_blank" rel="noopener noreferrer" class="buy-btn">🎮 Go to Website</a>
+                </div>
+            </div>
+
+            <div class="game-card">
+                <img src="assets/images/until-dawn.jpg" alt="Until Dawn">
+                <div class="game-card-info">
+                    <div class="game-card-title">Until Dawn</div>
+                    <div class="game-card-price">$59.99</div>
+                    <a href="https://www.playstation.com/en-us/games/until-dawn/" target="_blank" rel="noopener noreferrer" class="buy-btn">🎮 Go to Website</a>
+                </div>
+            </div>
+
+            <div class="game-card">
+                <img src="assets/images/ghost-of-tsushima.jpg" alt="Ghost of Tsushima">
+                <div class="game-card-info">
+                    <div class="game-card-title">Ghost of Tsushima Director's Cut</div>
+                    <div class="game-card-price">$59.99</div>
+                    <a href="https://www.playstation.com/en-us/games/ghost-of-tsushima/" target="_blank" rel="noopener noreferrer" class="buy-btn">🎮 Go to Website</a>
+                </div>
+            </div>
+
+            <div class="game-card">
+                <img src="assets/images/final-fantasy-xvi.jpg" alt="Final Fantasy XVI">
+                <div class="game-card-info">
+                    <div class="game-card-title">Final Fantasy XVI</div>
+                    <div class="game-card-price">$49.99</div>
+                    <a href="https://www.playstation.com/en-us/games/final-fantasy-xvi/" target="_blank" rel="noopener noreferrer" class="buy-btn">🎮 Go to Website</a>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="footer-links">
+            <a href="Home.html">Home</a>
+            <a href="Steam.html">Steam</a>
+            <a href="Xbox.html">Xbox</a>
+            <a href="PlayStation.html">PlayStation</a>
+            <a href="Nintendo.html">Nintendo</a>
+            <a href="Equipment.html">Equipment</a>
+        </div>
+        <div class="footer-copy">
+            &copy; 2024 GameStream. All rights reserved. Not affiliated with PlayStation (PROPERTY OF ALI SHAER AND SAJED GHANDOUR).
+        </div>
+    </footer>
+</body>
+</html>

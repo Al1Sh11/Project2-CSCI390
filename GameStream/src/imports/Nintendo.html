@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nintendo eShop - GameStream</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            min-height: 100vh;
+            font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+            color: #f5f7ff;
+            background: radial-gradient(circle at 10% 10%, #e60012 0%, transparent 35%),
+                        radial-gradient(circle at 90% 20%, #8b0000 0%, transparent 30%),
+                        linear-gradient(120deg, #0b132b, #1c2541);
+            background-attachment: fixed;
+        }
+
+        .navbar {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            width: min(1100px, 92%);
+            margin: 18px auto 0;
+            padding: 14px 20px;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            border-radius: 14px;
+            background: rgba(255, 255, 255, 0.08);
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .brand {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 14px;
+            letter-spacing: 2px;
+            color: #ffb703;
+            text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.5);
+            text-decoration: none;
+        }
+
+        .brand-badge {
+            width: 30px;
+            height: 30px;
+            border-radius: 8px;
+            background: #ffb703;
+            color: #1a1a1a;
+            display: grid;
+            place-items: center;
+            font-weight: 900;
+        }
+
+        .nav-links {
+            list-style: none;
+            display: flex;
+            gap: 18px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: #bfc7e6;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.2s ease;
+        }
+
+        .nav-links a:hover, .nav-links a.active { color: #ff4d4d; }
+
+        .cta {
+            padding: 10px 14px;
+            border-radius: 10px;
+            border: 0;
+            font-weight: 700;
+            text-decoration: none;
+            color: #161616;
+            background: #ffb703;
+            transition: transform 0.2s ease;
+        }
+
+        .cta:hover { transform: translateY(-1px); }
+
+        .menu-toggle {
+            display: none;
+        }
+
+        #menu-checkbox {
+            display: none;
+        }
+
+        .menu-label {
+            display: none;
+            background: none;
+            border: 0;
+            color: #f5f7ff;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .hero {
+            width: min(1100px, 92%);
+            margin: 40px auto;
+            padding: 60px 40px;
+            border-radius: 20px;
+            background: linear-gradient(135deg, rgba(230, 0, 18, 0.15), rgba(139, 0, 0, 0.3));
+            border: 1px solid rgba(230, 0, 18, 0.3);
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 16px;
+            color: #ff4d4d;
+        }
+
+        .hero p {
+            font-size: 1.1rem;
+            color: #bfc7e6;
+            margin-bottom: 24px;
+        }
+
+        .section {
+            width: min(1100px, 92%);
+            margin: 40px auto;
+            padding: 30px;
+            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid rgba(230, 0, 18, 0.3);
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #ff4d4d;
+        }
+
+        .featured-games {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .featured-card {
+            position: relative;
+            border-radius: 12px;
+            overflow: hidden;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(230, 0, 18, 0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+        }
+
+        .featured-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 30px rgba(255, 77, 77, 0.4);
+            border-color: #ff4d4d;
+        }
+
+        .featured-card img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            background: linear-gradient(135deg, #e60012, #8b0000);
+        }
+
+        .featured-badge {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            padding: 6px 12px;
+            border-radius: 6px;
+            background: #ffb703;
+            color: #1a1a1a;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+
+        .featured-info {
+            padding: 16px;
+        }
+
+        .featured-info h3 {
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+            color: #f5f7ff;
+        }
+
+        .game-price {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #ffb703;
+        }
+
+        .original-price {
+            font-size: 0.9rem;
+            color: #888;
+            text-decoration: line-through;
+            margin-left: 8px;
+        }
+
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 16px;
+        }
+
+        .go-website-btn {
+            margin-top: 10px;
+            padding: 8px 12px;
+            border: none;
+            border-radius: 8px;
+            background: #0ea5e9;
+            color: #fff;
+            font-size: 0.8rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+
+        .go-website-btn:hover {
+            background: #0284c7;
+        }
+
+        .game-card {
+            border-radius: 10px;
+            overflow: hidden;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(230, 0, 18, 0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .game-card:hover {
+            transform: scale(1.03);
+            border-color: #ff4d4d;
+            box-shadow: 0 0 20px rgba(255, 77, 77, 0.5);
+        }
+
+        .game-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            background: linear-gradient(135deg, #e60012, #8b0000);
+            display: block;
+        }
+
+        .game-card-info {
+            padding: 12px;
+        }
+
+        .game-card-title {
+            font-size: 0.85rem;
+            margin-bottom: 6px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            color: #f5f7ff;
+        }
+
+        .game-card-price {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: #ffb703;
+        }
+
+        .nswitch-badge {
+            display: inline-block;
+            padding: 2px 6px;
+            border-radius: 3px;
+            background: linear-gradient(90deg, #e60012, #ff4d4d);
+            color: #fff;
+            font-size: 0.7rem;
+            font-weight: 700;
+            margin-right: 6px;
+        }
+
+        .buy-btn {
+            display: block;
+            width: 100%;
+            margin-top: 12px;
+            padding: 10px 16px;
+            background: #ffb703;
+            color: #1a1a1a;
+            text-align: center;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 0.9rem;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .buy-btn:hover {
+            background: #ffc933;
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(255, 183, 3, 0.4);
+        }
+
+        .footer {
+            width: min(1100px, 92%);
+            margin: 60px auto 30px;
+            padding: 30px;
+            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            text-align: center;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: #bfc7e6;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .footer-links a:hover { color: #ff4d4d; }
+
+        @media (max-width: 760px) {
+            .navbar { flex-wrap: wrap; }
+            .menu-label { display: inline-block; }
+            .nav-links {
+                width: 100%;
+                display: none;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+                padding-top: 10px;
+            }
+            #menu-checkbox:checked ~ .nav-links { display: flex; }
+            .cta { display: none; }
+            .featured-games { grid-template-columns: 1fr; }
+            .games-grid { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <a href="Home.html" class="brand">
+            <span class="brand-badge">G</span>
+            <span>GameStream</span>
+        </a>
+        <input type="checkbox" id="menu-checkbox">
+        <label for="menu-checkbox" class="menu-label">&#9776;</label>
+        <ul class="nav-links" id="navLinks">
+            <li><a href="Home.html">Home</a></li>
+            <li><a href="Steam.html">Steam</a></li>
+            <li><a href="Xbox.html">Xbox</a></li>
+            <li><a href="PlayStation.html">PlayStation</a></li>
+            <li><a href="Nintendo.html" class="active">Nintendo</a></li>
+            <li><a href="Equipment.html">Equipment</a></li>
+        </ul>
+        <a class="cta" href="Login.html">Login</a>
+    </nav>
+
+    <section class="hero">
+        <h1>Nintendo eShop</h1>
+        <p>Explore the world of Nintendo with iconic franchises and indie gems for Switch.</p>
+    </section>
+
+    <section class="section">
+        <div class="section-header">
+            <h2 class="section-title">Best Sellers</h2>
+        </div>
+        <div class="featured-games">
+            <div class="featured-card">
+                <span class="featured-badge">TOP SELLER</span>
+                <img src="assets/images/LOZ-TOK.jpg" alt="Zelda Tears of the Kingdom">
+                <div class="featured-info">
+                    <h3>The Legend of Zelda: Tears of the Kingdom</h3>
+                    <div class="game-price">$69.99</div>
+                    <a href="https://www.nintendo.com/us/store/products/the-legend-of-zelda-tears-of-the-kingdom-switch/" target="_blank" rel="noopener noreferrer" class="buy-btn">Go to Store</a>
+                </div>
+            </div>
+            <div class="featured-card">
+                <span class="featured-badge">TOP SELLER</span>
+                <img src="assets/images/Supermario-Wonder.jpg" alt="Super Mario Bros Wonder">
+                <div class="featured-info">
+                    <h3>Super Mario Bros. Wonder</h3>
+                    <div class="game-price">$59.99</div>
+                    <a href="https://www.nintendo.com/us/store/products/super-mario-bros-wonder-switch/" target="_blank" rel="noopener noreferrer" class="buy-btn">Go to Store</a>
+                </div>
+            </div>
+            <div class="featured-card">
+                <span class="featured-badge">TOP SELLER</span>
+                <img src="assets/images/Pokemon-Scarlet-Violet.jpg" alt="Pokemon Scarlet Violet">
+                <div class="featured-info">
+                    <h3>Pokémon Scarlet & Violet</h3>
+                    <div class="game-price">$59.99</div>
+                    <a href="https://www.nintendo.com/us/store/products/pokemon-scarlet-switch/" target="_blank" rel="noopener noreferrer" class="buy-btn">Go to Store</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="section-header">
+            <h2 class="section-title">Nintendo Switch Games</h2>
+        </div>
+        <div class="games-grid">
+
+            <div class="game-card">
+                <img src="assets/images/Mario-Kart-8-Deluxe.jpg" alt="Mario Kart 8 Deluxe">
+                <div class="game-card-info">
+                    <div class="game-card-title">Mario Kart 8 Deluxe</div>
+                    <div class="game-card-price">$59.99</div>
+                    <a href="https://www.nintendo.com/us/store/products/mario-kart-8-deluxe-switch/" target="_blank" rel="noopener noreferrer" class="buy-btn">Go to Store</a>
+                </div>
+            </div>
+
+            <div class="game-card">
+                <img src="assets/images/Super-Smash-Bros-Ultimate.jpg" alt="Super Smash Bros Ultimate">
+                <div class="game-card-info">
+                    <div class="game-card-title">Super Smash Bros. Ultimate</div>
+                    <div class="game-card-price">$59.99</div>
+                    <a href="https://www.nintendo.com/us/store/products/super-smash-bros-ultimate-switch/" target="_blank" rel="noopener noreferrer" class="buy-btn">Go to Store</a>
+                </div>
+            </div>
+
+            <div class="game-card">
+                <img src="assets/images/Animal-Crossing-New-Horizons.jpg" alt="Animal Crossing NH">
+                <div class="game-card-info">
+                    <div class="game-card-title">Animal Crossing: New Horizons</div>
+                    <div class="game-card-price"><span class="nswitch-badge">*</span>$59.99</div>
+                    <a href="https://www.nintendo.com/us/store/products/animal-crossing-new-horizons-switch/" target="_blank" rel="noopener noreferrer" class="buy-btn">Go to Store</a>
+                </div>
+            </div>
+
+            <div class="game-card">
+                <img src="assets/images/Splatoon_3_cover.jpg" alt="Splatoon 3">
+                <div class="game-card-info">
+                    <div class="game-card-title">Splatoon 3</div>
+                    <div class="game-card-price">$59.99</div>
+                    <a href="https://www.nintendo.com/us/store/products/splatoon-3-switch/" target="_blank" rel="noopener noreferrer" class="buy-btn">Go to Store</a>
+                </div>
+            </div>
+
+            <div class="game-card">
+                <img src="assets/images/Metroid_Dread_cover.jpg" alt="Metroid Dread">
+                <div class="game-card-info">
+                    <div class="game-card-title">Metroid Dread</div>
+                    <div class="game-card-price">$59.99</div>
+                    <a href="https://www.nintendo.com/us/store/products/metroid-dread-switch/" target="_blank" rel="noopener noreferrer" class="buy-btn">Go to Store</a>
+                </div>
+            </div>
+
+            <div class="game-card">
+                <img src="assets/images/Kirby-Star-Allies.jpg" alt="Kirby">
+                <div class="game-card-info">
+                    <div class="game-card-title">Kirby and the Forgotten Land</div>
+                    <div class="game-card-price">$59.99</div>
+                    <a href="https://www.nintendo.com/us/store/products/kirby-and-the-forgotten-land-switch/" target="_blank" rel="noopener noreferrer" class="buy-btn">Go to Store</a>
+                </div>
+            </div>
+
+            <div class="game-card">
+                <img src="assets/images/Luigi's-Mansion-3-cover.jpg" alt="Luigi's Mansion 3">
+                <div class="game-card-info">
+                    <div class="game-card-title">Luigi's Mansion 3</div>
+                    <div class="game-card-price">$59.99</div>
+                    <a href="https://www.nintendo.com/us/store/products/luigis-mansion-3-switch/" target="_blank" rel="noopener noreferrer" class="buy-btn">Go to Store</a>
+                </div>
+            </div>
+
+            <div class="game-card">
+                <img src="assets/images/Fire_Emblem_Engage_cover.jpg" alt="Fire Emblem Engage">
+                <div class="game-card-info">
+                    <div class="game-card-title">Fire Emblem Engage</div>
+                    <div class="game-card-price">$59.99</div>
+                    <a href="https://www.nintendo.com/us/store/products/fire-emblem-engage-switch/" target="_blank" rel="noopener noreferrer" class="buy-btn">Go to Store</a>
+                </div>
+            </div>
+
+            <div class="game-card">
+                <img src="assets/images/Xenoblade_Chronicles_3_cover.jpg" alt="Xenoblade 3">
+                <div class="game-card-info">
+                    <div class="game-card-title">Xenoblade Chronicles 3</div>
+                    <div class="game-card-price">$59.99</div>
+                    <a href="https://www.nintendo.com/us/store/products/xenoblade-chronicles-3-switch/" target="_blank" rel="noopener noreferrer" class="buy-btn">Go to Store</a>
+                </div>
+            </div>
+
+            <div class="game-card">
+                <img src="assets/images/Bayonetta_2_cover.jpg" alt="Bayonetta 2">
+                <div class="game-card-info">
+                    <div class="game-card-title">Bayonetta 2</div>
+                    <div class="game-card-price">$59.99</div>
+                    <a href="https://www.nintendo.com/us/store/products/bayonetta-2-switch/" target="_blank" rel="noopener noreferrer" class="buy-btn">Go to Store</a>
+                </div>
+            </div>
+
+            <div class="game-card">
+                <img src="assets/images/Astral-Chain.jpg" alt="Astral Chain">
+                <div class="game-card-info">
+                    <div class="game-card-title">Astral Chain</div>
+                    <div class="game-card-price">$59.99</div>
+                    <a href="https://www.nintendo.com/us/store/products/astral-chain-switch/" target="_blank" rel="noopener noreferrer" class="buy-btn">Go to Store</a>
+                </div>
+            </div>
+
+            <div class="game-card">
+                <img src="assets/images/Ring_Fit_Adventure.jpg" alt="Ring Fit Adventure">
+                <div class="game-card-info">
+                    <div class="game-card-title">Ring Fit Adventure</div>
+                    <div class="game-card-price">$79.99</div>
+                    <a href="https://www.nintendo.com/us/store/products/ring-fit-adventure-switch/" target="_blank" rel="noopener noreferrer" class="buy-btn">Go to Store</a>
+                </div>
+            </div>
+
+            <div class="game-card">
+                <img src="assets/images/Nintendo_Switch_Sports.jpg" alt="Nintendo Switch Sports">
+                <div class="game-card-info">
+                    <div class="game-card-title">Nintendo Switch Sports</div>
+                    <div class="game-card-price">$49.99</div>
+                    <a href="https://www.nintendo.com/games/detail/nintendo-switch-sports-switch/" target="_blank" rel="noopener noreferrer" class="buy-btn">🎮 Go to Website</a>
+                </div>
+            </div>
+
+            <div class="game-card">
+                <img src="assets/images/Super_Mario_Odyssey.jpg" alt="Super Mario Odyssey">
+                <div class="game-card-info">
+                    <div class="game-card-title">Super Mario Odyssey</div>
+                    <div class="game-card-price">$59.99</div>
+                    <a href="https://www.nintendo.com/us/store/products/super-mario-odyssey-switch/" target="_blank" rel="noopener noreferrer" class="buy-btn">Go to Store</a>
+                </div>
+            </div>
+
+            <div class="game-card">
+                <img src="assets/images/The_Legend_of_Zelda_Breath_of_the_Wild.jpg" alt="Zelda BOTW">
+                <div class="game-card-info">
+                    <div class="game-card-title">Zelda: Breath of the Wild</div>
+                    <div class="game-card-price">$59.99</div>
+                    <a href="https://www.nintendo.com/us/store/products/the-legend-of-zelda-breath-of-the-wild-switch/" target="_blank" rel="noopener noreferrer" class="buy-btn">Go to Store</a>
+                </div>
+            </div>
+
+            <div class="game-card">
+                <img src="assets/images/The_Legend_of_Zelda_Link's_Awakening.jpg" alt="Zelda Links Awakening">
+                <div class="game-card-info">
+                    <div class="game-card-title">Zelda: Link's Awakening</div>
+                    <div class="game-card-price">$59.99</div>
+                    <a href="https://www.nintendo.com/us/store/products/the-legend-of-zelda-links-awakening-switch/" target="_blank" rel="noopener noreferrer" class="buy-btn">Go to Store</a>
+                </div>
+            </div>
+
+            <div class="game-card">
+                <img src="assets/images/Pokémon_Legends_Arceus.jpg" alt="Pokemon Legends Arceus">
+                <div class="game-card-info">
+                    <div class="game-card-title">Pokémon Legends: Arceus</div>
+                    <div class="game-card-price">$59.99</div>
+                    <a href="https://www.nintendo.com/us/store/products/pokemon-legends-arceus-switch/" target="_blank" rel="noopener noreferrer" class="buy-btn">Go to Store</a>
+                </div>
+            </div>
+
+            <div class="game-card">
+                <img src="assets/images/Mario_Party_Superstars.jpg" alt="Mario Party Superstars">
+                <div class="game-card-info">
+                    <div class="game-card-title">Mario Party Superstars</div>
+                    <div class="game-card-price">$59.99</div>
+                    <a href="https://www.nintendo.com/us/store/products/mario-party-superstars-switch/" target="_blank" rel="noopener noreferrer" class="buy-btn">Go to Store</a>
+                </div>
+            </div>
+
+            <div class="game-card">
+                <img src="assets/images/Paper_Mario_The_Origami_King.jpg" alt="Paper Mario TOK">
+                <div class="game-card-info">
+                    <div class="game-card-title">Paper Mario: The Origami King</div>
+                    <div class="game-card-price">$59.99</div>
+                    <a href="https://www.nintendo.com/us/store/products/paper-mario-the-origami-king-switch/" target="_blank" rel="noopener noreferrer" class="buy-btn">Go to Store</a>
+                </div>
+            </div>
+
+            <div class="game-card">
+                <img src="assets/images/Yoshi's_Crafted_World.jpg" alt="Yoshi">
+                <div class="game-card-info">
+                    <div class="game-card-title">Yoshi's Crafted World</div>
+                    <div class="game-card-price">$59.99</div>
+                    <a href="https://www.nintendo.com/us/store/products/yoshis-crafted-world-switch/" target="_blank" rel="noopener noreferrer" class="buy-btn">Go to Store</a>
+                </div>
+            </div>
+
+            <div class="game-card">
+                <img src="assets/images/Donkey_Kong_Country_Tropical_Freeze.jpg" alt="Donkey Kong">
+                <div class="game-card-info">
+                    <div class="game-card-title">Donkey Kong Country: Tropical Freeze</div>
+                    <div class="game-card-price">$59.99</div>
+                    <a href="https://www.nintendo.com/us/store/products/donkey-kong-country-tropical-freeze-switch/" target="_blank" rel="noopener noreferrer" class="buy-btn">Go to Store</a>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="footer-links">
+            <a href="Home.html">Home</a>
+            <a href="Steam.html">Steam</a>
+            <a href="Xbox.html">Xbox</a>
+            <a href="PlayStation.html">PlayStation</a>
+            <a href="Nintendo.html">Nintendo</a>
+            <a href="Equipment.html">Equipment</a>
+        </div>
+        <div class="footer-copy">
+            &copy; 2024 GameStream. All rights reserved. Not affiliated with Nintendo (PROPERTY OF ALI SHAER AND SAJED GHANDOUR).
+        </div>
+    </footer>
+</body>
+</html>
